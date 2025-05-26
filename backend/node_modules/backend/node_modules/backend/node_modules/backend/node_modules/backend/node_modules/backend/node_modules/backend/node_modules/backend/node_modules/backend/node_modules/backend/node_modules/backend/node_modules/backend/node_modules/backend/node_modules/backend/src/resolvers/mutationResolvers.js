@@ -27,7 +27,7 @@ const mutationResolvers = {
         id: newId,
         titulo: input.titulo,
         isbn: input.isbn,
-        año: input.año,
+        ano: input.ano,
         autorId: input.autorId,
         generoId: input.generoId,
         disponible: true

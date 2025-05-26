@@ -1,12 +1,12 @@
 const express = require('express');
 const { ApolloServer } = require('apollo-server-express');
 const cors = require('cors');
-const { typeDefs } = require('./src/schema/typeDefs');
-const resolvers = require('./resolvers');
+const { typeDefs } = require('./schema/typeDefs');
+const resolvers = require('./resolvers'); // <--- Importa el objeto resolvers
 
 async function startServer() {
   const app = express();
-  
+
   app.use(cors({
     origin: process.env.CORS_ORIGIN || '*',
     credentials: true
@@ -14,19 +14,17 @@ async function startServer() {
 
   const server = new ApolloServer({
     typeDefs,
-    resolvers,
+    resolvers, // <--- Usa el objeto resolvers
     introspection: true,
     playground: true,
-    context: ({ req }) => {
-      return { req };
-    }
+    context: ({ req }) => ({ req }),
   });
 
   await server.start();
   server.applyMiddleware({ app, path: '/graphql' });
 
   const PORT = process.env.PORT || 4000;
-  
+
   app.listen(PORT, () => {
     console.log(`🚀 Servidor ejecutándose en http://localhost:${PORT}${server.graphqlPath}`);
   });

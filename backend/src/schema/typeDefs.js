@@ -19,7 +19,7 @@ const typeDefs = gql`
     id: ID!
     titulo: String!
     isbn: String!
-    año: Int!
+    ano: Int!
     disponible: Boolean!
     autor: Autor!
     genero: Genero!
