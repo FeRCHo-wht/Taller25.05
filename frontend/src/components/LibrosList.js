@@ -7,7 +7,7 @@ const GET_LIBROS = gql`
       id
       titulo
       autorId 
-      generoId
+      generoId  
       isbn
     }
   }
