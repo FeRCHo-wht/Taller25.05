@@ -141,7 +141,7 @@ const queryResolvers = {
         throw new Error('Préstamo no encontrado');
       }
       return prestamo;
-    } catch (error) {
+    } catch (error)
       throw new Error(`Error al buscar préstamo: ${error.message}`);
     }
   },
