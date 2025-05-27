@@ -19,7 +19,7 @@ const typeDefs = gql`
     id: ID!
     titulo: String!
     isbn: String!
-    ano: Int!
+    fecha: Int!
     disponible: Boolean!
     autor: Autor!
     genero: Genero!
@@ -64,7 +64,7 @@ const typeDefs = gql`
   input LibroInput {
     titulo: String!
     isbn: String!
-    año: Int!
+    fecha: Int!
     autorId: ID!
     generoId: ID!
   }

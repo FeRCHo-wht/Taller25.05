@@ -267,13 +267,13 @@ class Database {
       fechaPrestamo: new Date().toISOString().split('T')[0],
       estado: "ACTIVO"
     };
-    
+
     // Marcar libro como no disponible
     const libro = this.getLibro(prestamoData.libroId);
     if (libro) {
       this.actualizarLibro(libro.id, { ...libro, disponible: false });
     }
-    
+
     this.data.prestamos.push(nuevoPrestamo);
     this.saveData();
     return nuevoPrestamo;
@@ -283,13 +283,13 @@ class Database {
     const prestamo = this.getPrestamo(prestamoId);
     if (prestamo) {
       prestamo.estado = "DEVUELTO";
-      
+
       // Marcar libro como disponible
       const libro = this.getLibro(prestamo.libroId);
       if (libro) {
         this.actualizarLibro(libro.id, { ...libro, disponible: true });
       }
-      
+
       this.saveData();
       return prestamo;
     }

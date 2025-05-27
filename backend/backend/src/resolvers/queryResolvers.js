@@ -3,8 +3,9 @@ const database = require('../data/database');
 const queryResolvers = {
   // Queries para Libros
   libros: () => {
+    console.log(database.getLibros());
     try {
-      return database.libros;
+      return database.getLibros();
     } catch (error) {
       throw new Error(`Error al obtener libros: ${error.message}`);
     }
@@ -12,7 +13,7 @@ const queryResolvers = {
 
   libro: (_, { id }) => {
     try {
-      const libro = database.libros.find(libro => libro.id === id);
+      const libro = database.getLibros().find(libro => libro.id === id);
       if (!libro) {
         throw new Error('Libro no encontrado');
       }
@@ -24,11 +25,11 @@ const queryResolvers = {
 
   librosPorGenero: (_, { generoId }) => {
     try {
-      const genero = database.generos.find(g => g.id === generoId);
+      const genero = database.getGeneros().find(g => g.id === generoId);
       if (!genero) {
         throw new Error('Género no encontrado');
       }
-      return database.libros.filter(libro => libro.generoId === generoId);
+      return database.getLibros().filter(libro => libro.generoId === generoId);
     } catch (error) {
       throw new Error(`Error al buscar libros por género: ${error.message}`);
     }
@@ -36,11 +37,11 @@ const queryResolvers = {
 
   librosPorAutor: (_, { autorId }) => {
     try {
-      const autor = database.autores.find(a => a.id === autorId);
+      const autor = database.getAutores().find(a => a.id === autorId);
       if (!autor) {
         throw new Error('Autor no encontrado');
       }
-      return database.libros.filter(libro => libro.autorId === autorId);
+      return database.getLibros().filter(libro => libro.autorId === autorId);
     } catch (error) {
       throw new Error(`Error al buscar libros por autor: ${error.message}`);
     }
@@ -48,12 +49,13 @@ const queryResolvers = {
 
   buscarLibros: (_, { termino }) => {
     try {
+      const libros = database.getLibros();
       if (!termino || termino.trim() === '') {
-        return database.libros;
+        return libros;
       }
-      
+
       const terminoLower = termino.toLowerCase();
-      return database.libros.filter(libro => 
+      return libros.filter(libro =>
         libro.titulo.toLowerCase().includes(terminoLower) ||
         libro.isbn.toLowerCase().includes(terminoLower)
       );
@@ -65,7 +67,7 @@ const queryResolvers = {
   // Queries para Autores
   autores: () => {
     try {
-      return database.autores;
+      return database.getAutores();
     } catch (error) {
       throw new Error(`Error al obtener autores: ${error.message}`);
     }
@@ -73,7 +75,7 @@ const queryResolvers = {
 
   autor: (_, { id }) => {
     try {
-      const autor = database.autores.find(autor => autor.id === id);
+      const autor = database.getAutores().find(autor => autor.id === id);
       if (!autor) {
         throw new Error('Autor no encontrado');
       }
@@ -86,7 +88,7 @@ const queryResolvers = {
   // Queries para Géneros
   generos: () => {
     try {
-      return database.generos.filter(genero => genero.activo);
+      return database.getGeneros().filter(genero => genero.activo);
     } catch (error) {
       throw new Error(`Error al obtener géneros: ${error.message}`);
     }
@@ -94,7 +96,7 @@ const queryResolvers = {
 
   genero: (_, { id }) => {
     try {
-      const genero = database.generos.find(genero => genero.id === id);
+      const genero = database.getGeneros().find(genero => genero.id === id);
       if (!genero) {
         throw new Error('Género no encontrado');
       }
@@ -107,7 +109,7 @@ const queryResolvers = {
   // Queries para Usuarios
   usuarios: () => {
     try {
-      return database.usuarios.filter(usuario => usuario.activo);
+      return database.getUsuarios().filter(usuario => usuario.activo);
     } catch (error) {
       throw new Error(`Error al obtener usuarios: ${error.message}`);
     }
@@ -115,7 +117,7 @@ const queryResolvers = {
 
   usuario: (_, { id }) => {
     try {
-      const usuario = database.usuarios.find(usuario => usuario.id === id);
+      const usuario = database.getUsuarios().find(usuario => usuario.id === id);
       if (!usuario) {
         throw new Error('Usuario no encontrado');
       }
@@ -128,7 +130,7 @@ const queryResolvers = {
   // Queries para Préstamos
   prestamos: () => {
     try {
-      return database.prestamos;
+      return database.getPrestamos();
     } catch (error) {
       throw new Error(`Error al obtener préstamos: ${error.message}`);
     }
@@ -136,7 +138,7 @@ const queryResolvers = {
 
   prestamo: (_, { id }) => {
     try {
-      const prestamo = database.prestamos.find(prestamo => prestamo.id === id);
+      const prestamo = database.getPrestamos().find(prestamo => prestamo.id === id);
       if (!prestamo) {
         throw new Error('Préstamo no encontrado');
       }
@@ -148,11 +150,11 @@ const queryResolvers = {
 
   prestamosPorUsuario: (_, { usuarioId }) => {
     try {
-      const usuario = database.usuarios.find(u => u.id === usuarioId);
+      const usuario = database.getUsuarios().find(u => u.id === usuarioId);
       if (!usuario) {
         throw new Error('Usuario no encontrado');
       }
-      return database.prestamos.filter(prestamo => prestamo.usuarioId === usuarioId);
+      return database.getPrestamos().filter(prestamo => prestamo.usuarioId === usuarioId);
     } catch (error) {
       throw new Error(`Error al buscar préstamos del usuario: ${error.message}`);
     }
@@ -160,7 +162,7 @@ const queryResolvers = {
 
   prestamosActivos: () => {
     try {
-      return database.prestamos.filter(prestamo => prestamo.estado === 'ACTIVO');
+      return database.getPrestamos().filter(prestamo => prestamo.estado === 'ACTIVO');
     } catch (error) {
       throw new Error(`Error al obtener préstamos activos: ${error.message}`);
     }
@@ -169,7 +171,7 @@ const queryResolvers = {
   prestamosVencidos: () => {
     try {
       const hoy = new Date().toISOString().split('T')[0];
-      return database.prestamos.filter(prestamo => 
+      return database.getPrestamos().filter(prestamo =>
         prestamo.estado === 'ACTIVO' && prestamo.fechaDevolucion < hoy
       );
     } catch (error) {

@@ -5,9 +5,7 @@ const GET_LIBROS = gql`
   query GetLibros {
     libros {
       id
-      titulo
-      autorId 
-      generoId  
+      titulo  
       isbn
     }
   }
